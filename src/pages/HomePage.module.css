@@ -1,0 +1,38 @@
+.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px;
+  gap: 40px;
+}
+
+.header {
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  font-weight: 800;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  margin-top: 8px;
+  font-size: 1.1rem;
+}
+
+.loginSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.gamesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 800px;
+}
