@@ -1,0 +1,151 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.setupForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.inputGroup label {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sliderRow input[type="range"] {
+  flex: 1;
+  accent-color: var(--color-primary);
+}
+
+.sliderValue {
+  font-size: 1.1rem;
+  font-weight: 600;
+  min-width: 2ch;
+  text-align: center;
+}
+
+.commandInput {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary-dim);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.commandInput:focus {
+  border-color: var(--color-primary);
+}
+
+.goButton, .skipButton, .playAgainButton {
+  padding: 10px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition: opacity 0.2s;
+}
+
+.goButton {
+  background: var(--color-primary);
+  color: #0f1923;
+}
+
+.goButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.skipButton {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.playAgainButton {
+  background: var(--color-primary);
+  color: #0f1923;
+}
+
+.grid {
+  display: grid;
+  gap: 2px;
+  background: var(--color-primary-dim);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border-radius: 3px;
+  aspect-ratio: 1;
+}
+
+.turtleCell {
+  background: var(--color-surface-hover);
+}
+
+.turtle {
+  font-size: 1.4em;
+  line-height: 1;
+  transition: transform 0.1s;
+}
+
+.commandDisplay {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  color: var(--color-text-muted);
+}
+
+.commandDisplay span {
+  transition: color 0.1s;
+}
+
+.activeCommand {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.executedCommand {
+  color: var(--color-text);
+}
+
+.result {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--color-text);
+  line-height: 1.8;
+}
+
+.resultHighlight {
+  color: var(--color-primary);
+  font-weight: 600;
+}

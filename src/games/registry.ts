@@ -2,6 +2,7 @@ import type { GameDefinition } from '../types';
 import { TicTacToe } from './tic-tac-toe/TicTacToe';
 import { ConnectFour } from './connect-four/ConnectFour';
 import { Sudoku } from './sudoku/Sudoku';
+import { Turtle } from './turtle/Turtle';
 
 export const gameRegistry: GameDefinition[] = [
   {
@@ -24,6 +25,13 @@ export const gameRegistry: GameDefinition[] = [
     description: 'Fill the 9×9 grid. Choose your difficulty level.',
     icon: '🔢',
     component: Sudoku,
+  },
+  {
+    id: 'turtle',
+    name: 'Turtle',
+    description: 'Program a turtle to navigate a grid. Enter commands and watch it go!',
+    icon: '🐢',
+    component: Turtle,
   },
 ];
 
