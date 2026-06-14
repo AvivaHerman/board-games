@@ -148,7 +148,7 @@
 }
 
 .flickerCommand {
-  animation: flicker 0.3s ease-in-out;
+  animation: flicker 0.6s ease-in-out;
 }
 
 @keyframes flicker {

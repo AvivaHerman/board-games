@@ -76,7 +76,7 @@ export function Turtle({ onGameEnd }: GameComponentProps) {
     intervalRef.current = window.setInterval(() => {
       setCurrentStep((s) => Math.min(s + 1, trace.length - 1));
       setFlickerKey((k) => k + 1);
-    }, 400);
+    }, 1000);
     return clearTimer;
   }, [phase, trace.length, clearTimer, finishGame, currentStep]);
 
