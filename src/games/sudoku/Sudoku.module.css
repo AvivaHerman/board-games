@@ -1,0 +1,194 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ── Difficulty Picker ──────────────────────────────── */
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 16px;
+}
+
+.pickerTitle {
+  font-size: 1.4rem;
+  color: var(--color-primary);
+}
+
+.pickerButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 280px;
+}
+
+.diffBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+  background: var(--color-surface);
+}
+
+.diffBtn:hover {
+  transform: translateY(-2px);
+}
+
+.diffBtn.beginner { border-color: var(--color-success); }
+.diffBtn.intermediate { border-color: #ffa726; }
+.diffBtn.expert { border-color: var(--color-danger); }
+
+.diffLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.beginner .diffLabel  { color: var(--color-success); }
+.intermediate .diffLabel { color: #ffa726; }
+.expert .diffLabel    { color: var(--color-danger); }
+
+.diffDesc {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+/* ── Header (difficulty badge + timer) ──────────────── */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 364px;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge.beginner    { background: rgba(102, 187, 106, 0.15); color: var(--color-success); }
+.badge.intermediate { background: rgba(255, 167, 38, 0.15); color: #ffa726; }
+.badge.expert      { background: rgba(239, 83, 80, 0.15);  color: var(--color-danger); }
+
+.timer {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Board ──────────────────────────────────────────── */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(9, 40px);
+  grid-template-rows: repeat(9, 40px);
+  border: 2px solid var(--color-primary-dim);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  background: var(--color-surface);
+  border: 1px solid #2a3a4a;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: background 0.1s;
+  padding: 0;
+  outline: none;
+}
+
+.cell:focus {
+  outline: none;
+}
+
+.given {
+  color: var(--color-text);
+  font-weight: 700;
+  background: #162030;
+}
+
+.highlight {
+  background: #1e3045;
+}
+
+.selected {
+  background: var(--color-primary-dim) !important;
+  color: white !important;
+}
+
+.conflict {
+  background: rgba(239, 83, 80, 0.25) !important;
+  color: var(--color-danger) !important;
+}
+
+.sameValue {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* Thick borders for 3×3 box separators */
+.thickRight {
+  border-right: 2px solid var(--color-primary-dim) !important;
+}
+
+.thickBottom {
+  border-bottom: 2px solid var(--color-primary-dim) !important;
+}
+
+/* ── Number pad ─────────────────────────────────────── */
+
+.numpad {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 364px;
+}
+
+.numBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-primary-dim);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.numBtn:hover {
+  background: var(--color-surface-hover);
+}
+
+.eraseBtn {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.eraseBtn:hover {
+  background: rgba(239, 83, 80, 0.1);
+}
