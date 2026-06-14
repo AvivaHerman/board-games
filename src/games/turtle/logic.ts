@@ -7,11 +7,72 @@ export interface TurtleState {
   direction: Direction;
 }
 
+export function validateBrackets(input: string): string | null {
+  let depth = 0;
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === '[') depth++;
+    else if (input[i] === ']') {
+      depth--;
+      if (depth < 0) return 'Unexpected closing bracket at position ' + (i + 1);
+    }
+  }
+  if (depth > 0) return 'Missing closing bracket' + (depth > 1 ? `s (${depth} open)` : '');
+  return null;
+}
+
+export interface ParseResult {
+  commands: Command[];
+  sourceMap: number[];
+}
+
 export function parseCommands(input: string): Command[] {
-  return input
-    .toUpperCase()
-    .split('')
-    .filter((c): c is Command => c === 'F' || c === 'L' || c === 'R');
+  return parseWithMapping(input).commands;
+}
+
+export function parseWithMapping(input: string): ParseResult {
+  const upper = input.toUpperCase();
+  const commands: Command[] = [];
+  const sourceMap: number[] = [];
+  parse(upper, 0, commands, sourceMap);
+  return { commands, sourceMap };
+}
+
+function parse(input: string, start: number, out: Command[], map: number[]): number {
+  let i = start;
+  while (i < input.length) {
+    const ch = input[i];
+    if (ch === ']') return i + 1;
+    if (ch === 'F' || ch === 'L' || ch === 'R') {
+      out.push(ch);
+      map.push(i);
+      i++;
+    } else if (ch >= '0' && ch <= '9') {
+      let numStr = '';
+      while (i < input.length && input[i] >= '0' && input[i] <= '9') {
+        numStr += input[i];
+        i++;
+      }
+      const count = parseInt(numStr, 10);
+      if (i < input.length && input[i] === '[') {
+        const segment: Command[] = [];
+        const segmentMap: number[] = [];
+        i = parse(input, i + 1, segment, segmentMap);
+        for (let r = 0; r < count; r++) {
+          out.push(...segment);
+          map.push(...segmentMap);
+        }
+      } else if (i < input.length && (input[i] === 'F' || input[i] === 'L' || input[i] === 'R')) {
+        for (let r = 0; r < count; r++) {
+          out.push(input[i] as Command);
+          map.push(i);
+        }
+        i++;
+      }
+    } else {
+      i++;
+    }
+  }
+  return i;
 }
 
 export function rotateLeft(dir: Direction): Direction {

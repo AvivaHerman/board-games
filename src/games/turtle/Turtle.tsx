@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { GameComponentProps } from '../../types';
-import { parseCommands, executeAll, type TurtleState, type Command } from './logic';
+import { parseCommands, parseWithMapping, validateBrackets, executeAll, type TurtleState } from './logic';
 import styles from './Turtle.module.css';
 
 type Phase = 'setup' | 'animating' | 'result';
@@ -25,10 +25,14 @@ export function Turtle({ onGameEnd }: GameComponentProps) {
   const [phase, setPhase] = useState<Phase>('setup');
   const [trace, setTrace] = useState<TurtleState[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
-  const [commands, setCommands] = useState<Command[]>([]);
+  const [sourceMap, setSourceMap] = useState<number[]>([]);
+  const [originalInput, setOriginalInput] = useState('');
+  const [flickerKey, setFlickerKey] = useState(0);
   const startTime = useRef(Date.now());
   const intervalRef = useRef<number | null>(null);
   const endedRef = useRef(false);
+  const onGameEndRef = useRef(onGameEnd);
+  onGameEndRef.current = onGameEnd;
 
   const currentState = trace[currentStep] || { x: 1, y: 1, direction: 'N' };
 
@@ -44,37 +48,34 @@ export function Turtle({ onGameEnd }: GameComponentProps) {
     endedRef.current = true;
     clearTimer();
     setPhase('result');
-    onGameEnd({ winner: 'player', durationMs: Date.now() - startTime.current });
-  }, [clearTimer, onGameEnd]);
+    onGameEndRef.current({ winner: 'player', durationMs: Date.now() - startTime.current });
+  }, [clearTimer]);
 
   useEffect(() => () => clearTimer(), [clearTimer]);
 
   function handleGo() {
-    const parsed = parseCommands(commandInput);
-    if (parsed.length === 0) return;
-    const fullTrace = executeAll(parsed, gridSize);
-    setCommands(parsed);
+    const { commands, sourceMap: sm } = parseWithMapping(commandInput);
+    if (commands.length === 0) return;
+    const fullTrace = executeAll(commands, gridSize);
+    setSourceMap(sm);
+    setOriginalInput(commandInput);
     setTrace(fullTrace);
     setCurrentStep(0);
+    setFlickerKey(0);
     setPhase('animating');
     startTime.current = Date.now();
     endedRef.current = false;
   }
 
   useEffect(() => {
-    if (phase !== 'animating') return;
+    if (phase !== 'animating' || trace.length === 0) return;
     if (currentStep >= trace.length - 1) {
       finishGame();
       return;
     }
     intervalRef.current = window.setInterval(() => {
-      setCurrentStep((s) => {
-        const next = s + 1;
-        if (next >= trace.length - 1) {
-          finishGame();
-        }
-        return Math.min(next, trace.length - 1);
-      });
+      setCurrentStep((s) => Math.min(s + 1, trace.length - 1));
+      setFlickerKey((k) => k + 1);
     }, 400);
     return clearTimer;
   }, [phase, trace.length, clearTimer, finishGame, currentStep]);
@@ -85,6 +86,9 @@ export function Turtle({ onGameEnd }: GameComponentProps) {
   }
 
   const cellSize = Math.min(36, 400 / gridSize);
+  const bracketError = commandInput ? validateBrackets(commandInput) : null;
+  const parsed = !bracketError ? parseCommands(commandInput) : [];
+  const goDisabled = parsed.length === 0 || !!bracketError;
 
   return (
     <div className={styles.container}>
@@ -104,20 +108,23 @@ export function Turtle({ onGameEnd }: GameComponentProps) {
             </div>
           </div>
           <div className={styles.inputGroup}>
-            <label>Commands (F = Forward, L = Left, R = Right)</label>
+            <label>Commands (F = Forward, L = Left, R = Right, e.g. 3F, 2[FR])</label>
             <input
-              className={styles.commandInput}
+              className={`${styles.commandInput} ${bracketError ? styles.commandInputError : ''}`}
               type="text"
               value={commandInput}
               onChange={(e) => setCommandInput(e.target.value)}
-              placeholder="e.g. FFRFLFF"
-              onKeyDown={(e) => e.key === 'Enter' && handleGo()}
+              placeholder="e.g. 3F2[LF] or FFRFLFF"
+              onKeyDown={(e) => e.key === 'Enter' && !goDisabled && handleGo()}
             />
+            {bracketError && (
+              <span className={styles.errorText}>{bracketError}</span>
+            )}
           </div>
           <button
             className={styles.goButton}
             onClick={handleGo}
-            disabled={parseCommands(commandInput).length === 0}
+            disabled={goDisabled}
           >
             Go
           </button>
@@ -157,20 +164,23 @@ export function Turtle({ onGameEnd }: GameComponentProps) {
           {phase === 'animating' && (
             <>
               <div className={styles.commandDisplay}>
-                {commands.map((cmd, i) => (
-                  <span
-                    key={i}
-                    className={
-                      i === currentStep
-                        ? styles.activeCommand
-                        : i < currentStep
-                          ? styles.executedCommand
+                {originalInput.split('').map((ch, i) => {
+                  const activeSourceIdx = sourceMap[currentStep];
+                  const isActive = i === activeSourceIdx;
+                  const isFlicker = isActive && currentStep > 0 && sourceMap[currentStep - 1] === activeSourceIdx;
+                  return (
+                    <span
+                      key={isFlicker ? `${i}-${flickerKey}` : i}
+                      className={
+                        isActive
+                          ? `${styles.activeCommand} ${isFlicker ? styles.flickerCommand : ''}`
                           : ''
-                    }
-                  >
-                    {cmd}
-                  </span>
-                ))}
+                      }
+                    >
+                      {ch}
+                    </span>
+                  );
+                })}
               </div>
               <button className={styles.skipButton} onClick={handleSkip}>
                 Skip
