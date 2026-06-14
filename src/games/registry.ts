@@ -1,6 +1,7 @@
 import type { GameDefinition } from '../types';
 import { TicTacToe } from './tic-tac-toe/TicTacToe';
 import { ConnectFour } from './connect-four/ConnectFour';
+import { Sudoku } from './sudoku/Sudoku';
 import { Turtle } from './turtle/Turtle';
 
 export const gameRegistry: GameDefinition[] = [
@@ -17,6 +18,13 @@ export const gameRegistry: GameDefinition[] = [
     description: 'Drop discs into columns. Connect four to win!',
     icon: '🔴🟡',
     component: ConnectFour,
+  },
+  {
+    id: 'sudoku',
+    name: 'Sudoku',
+    description: 'Fill the 9×9 grid. Choose your difficulty level.',
+    icon: '🔢',
+    component: Sudoku,
   },
   {
     id: 'turtle',
