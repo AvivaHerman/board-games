@@ -1,6 +1,7 @@
 import type { GameDefinition } from '../types';
 import { TicTacToe } from './tic-tac-toe/TicTacToe';
 import { ConnectFour } from './connect-four/ConnectFour';
+import { Turtle } from './turtle/Turtle';
 
 export const gameRegistry: GameDefinition[] = [
   {
@@ -16,6 +17,13 @@ export const gameRegistry: GameDefinition[] = [
     description: 'Drop discs into columns. Connect four to win!',
     icon: '🔴🟡',
     component: ConnectFour,
+  },
+  {
+    id: 'turtle',
+    name: 'Turtle',
+    description: 'Program a turtle to navigate a grid. Enter commands and watch it go!',
+    icon: '🐢',
+    component: Turtle,
   },
 ];
 
